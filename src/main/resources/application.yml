@@ -1,0 +1,17 @@
+####### PI SERVER
+
+lists:
+    home: /home/pi/pi-lists/
+
+---
+
+####### LOCAL DEV
+
+spring:
+    profiles: local-dev
+
+lists:
+    home: /mnt/disk2/home/egor/prog/cowon/
+    
+    
+

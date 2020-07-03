@@ -1,0 +1,6 @@
+= pi-server
+
+JSON-сервер на Raspberry Pi
+
+Запускается командой::
+gradle dev bootRun
