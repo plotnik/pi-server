@@ -5,13 +5,23 @@ lists:
 
 ---
 
-####### LOCAL DEV
+####### LOCAL LINUX
 
 spring:
-    profiles: local-dev
+    profiles: local-linux
 
 lists:
     home: /mnt/disk2/home/egor/prog/cowon/
-    
-    
+
+---
+
+####### LOCAL MAC
+
+spring:
+    profiles: local-mac
+
+lists:
+    home: /Users/eabramovich/Documents/pi/json
+
+
 

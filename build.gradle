@@ -25,8 +25,14 @@ test {
 	useJUnitPlatform()
 }
 
-task dev {
+task ll {
 	doLast {
-		bootRun.systemProperty "spring.profiles.active", "local-dev"
+		bootRun.systemProperty "spring.profiles.active", "local-linux"
+	}
+}
+
+task mm {
+	doLast {
+		bootRun.systemProperty "spring.profiles.active", "local-mac"
 	}
 }

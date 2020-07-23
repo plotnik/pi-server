@@ -5,68 +5,73 @@ import com.fasterxml.jackson.annotation.JsonInclude;
 @JsonInclude(JsonInclude.Include.NON_NULL)
 public class CowonAlbum {
 
-		/**
-		 * Название папки с альбомом
-		 */		
-        String name;
-        
-        /**
-         * Альбомы одного исполнителя могут быть объединены в одну папку (не обязательно)
-         */
-        String artist;
-        
-        /**
-         * На плейере папки исполнителей могут быть разнесены в папки с алфавитом (не обязательно)
-         */
-        String az;
-        
-        /**
-         * URL с адресом обложки альбома, которую мы хотим найти в нашей папке с музыкой
-         */
-        String cover;
-        
-        /**
-         * Метка диска на плейере
-         */
-        String drive;
+    /**
+     * Название папки с альбомом
+     */
+    String name;
 
-        public String getName() {
-            return name;
-        }
+    /**
+     * Альбомы одного исполнителя могут быть объединены в одну папку (не обязательно)
+     */
+    String artist;
 
-        public void setName(String name) {
-            this.name = name;
-        }
+    /**
+     * На плейере папки исполнителей могут быть разнесены в папки с алфавитом (не обязательно)
+     */
+    String az;
 
-        public String getArtist() {
-            return artist;
-        }
+    /**
+     * URL с адресом обложки альбома, которую мы хотим найти в нашей папке с музыкой
+     */
+    String cover;
 
-        public void setArtist(String artist) {
-            this.artist = artist;
-        }
+    /**
+     * Метка диска на плейере
+     */
+    String drive;
 
-        public String getAz() {
-            return az;
-        }
+    public String getName() {
+        return name;
+    }
 
-        public void setAz(String az) {
-            this.az = az;
-        }
+    public void setName(String name) {
+        this.name = name;
+    }
 
-        public String getCover() {
-            return cover;
-        }
+    public String getArtist() {
+        return artist;
+    }
 
-        public void setCover(String cover) {
-            this.cover = cover;
-        }
+    public void setArtist(String artist) {
+        this.artist = artist;
+    }
 
-        public String getDrive() {
-            return drive;
-        }
+    public String getAz() {
+        return az;
+    }
 
-        public void setDrive(String drive) {
-            this.drive = drive;
-        }    
+    public void setAz(String az) {
+        this.az = az;
+    }
+
+    public String getCover() {
+        return cover;
+    }
+
+    public void setCover(String cover) {
+        this.cover = cover;
+    }
+
+    public String getDrive() {
+        return drive;
+    }
+
+    public void setDrive(String drive) {
+        this.drive = drive;
+    }
+
+    @Override
+    public String toString() {
+        return ("x9".equals(drive) ? "1" : "2") + ":" + az + "/" + (artist != null ? artist + "/" : "") + name;
+    }
 }

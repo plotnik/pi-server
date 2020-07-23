@@ -2,5 +2,8 @@
 
 JSON-сервер на Raspberry Pi
 
-Запускается командой::
-gradle dev bootRun
+На local lunux запускается командой::
+gradle ll bootRun
+
+На local mac запускается командой::
+gradle mm bootRun
