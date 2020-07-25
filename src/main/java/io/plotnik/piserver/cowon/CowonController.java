@@ -70,6 +70,9 @@ public class CowonController {
             if (limit != 0) {
                 toIndex = Math.min(skip + limit, toIndex);
             }
+            if (skip>toIndex) {
+                skip = toIndex;
+            }
             result = result.subList(skip, toIndex);
         }
 
@@ -110,17 +113,9 @@ public class CowonController {
      * Отсортировать список альбомов.
      */
     void sortAlbums() {
-        Collections.sort(jalbums, new Comparator() {
+        Collections.sort(jalbums, new Comparator<CowonAlbum>() {
             @Override
-            public int compare(Object o1, Object o2) {
-                int result = nestedCompare(o1, o2);
-                //logger.log(Level.INFO, "=== result: " + result + ", a1:" + o1 + ", a2: " + o2);
-                return result;
-            }
-
-            int nestedCompare(Object o1, Object o2) {
-                CowonAlbum a1 = (CowonAlbum) o1;
-                CowonAlbum a2 = (CowonAlbum) o2;
+            public int compare(CowonAlbum a1, CowonAlbum a2) {
                 String k1 = getKey(a1);
                 String k2 = getKey(a2);
 
