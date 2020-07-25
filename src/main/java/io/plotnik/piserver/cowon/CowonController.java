@@ -68,7 +68,7 @@ public class CowonController {
         if (skip != 0 || limit != 0) {
             int toIndex = result.size();
             if (limit != 0) {
-                toIndex = skip + limit;
+                toIndex = Math.min(skip + limit, toIndex);
             }
             result = result.subList(skip, toIndex);
         }
