@@ -36,8 +36,11 @@ public class CowonController {
 
     static final Logger logger = Logger.getLogger(CowonController.class.getName());
 
-    @Value("${lists.home}")
-    private String listsHome;
+    @Value("${home.path}")
+    private String homePath;  
+
+    @Value("${lists.path}")
+    private String listsPath;  
 
     List<CowonAlbum> jalbums;
     Map<String, CowonHistory> history;
@@ -85,13 +88,13 @@ public class CowonController {
             ObjectMapper mapper = new ObjectMapper();
 
             // прочитать из файла список альбомов на плейере
-            byte[] jsonData = Files.readAllBytes(Paths.get(listsHome + COWON_JSON));
+            byte[] jsonData = Files.readAllBytes(Paths.get(homePath, listsPath + COWON_JSON));
             jalbums = mapper.readValue(jsonData, new TypeReference<List<CowonAlbum>>() {
             });
 
             // прочитать из файла историю
-            if (Files.exists(Paths.get(listsHome + HISTORY_JSON))) {
-                jsonData = Files.readAllBytes(Paths.get(listsHome + HISTORY_JSON));
+            if (Files.exists(Paths.get(homePath, listsPath + HISTORY_JSON))) {
+                jsonData = Files.readAllBytes(Paths.get(homePath, listsPath + HISTORY_JSON));
                 history = mapper.readValue(jsonData, new TypeReference<Map<String, CowonHistory>>() {
                 });
 
@@ -171,7 +174,7 @@ public class CowonController {
     private void saveHistory() {
         try {
             ObjectMapper mapper = new ObjectMapper();
-            mapper.writeValue(Paths.get(listsHome + HISTORY_JSON).toFile(), history);
+            mapper.writeValue(Paths.get(homePath, listsPath + HISTORY_JSON).toFile(), history);
 
         } catch (IOException ex) {
             logger.log(Level.SEVERE, null, ex);

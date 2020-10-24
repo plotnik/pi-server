@@ -13,13 +13,16 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 @RestController
 public class BookController {
 
-    @Value("${lists.home}")
-    private String listsHome;  
+    @Value("${home.path}")
+    private String homePath;  
+
+    @Value("${lists.path}")
+    private String listsPath;  
 
     @RequestMapping(value="/books", method=RequestMethod.GET)
     public Book[] getList() {
         try {
-            byte[] jsonData = Files.readAllBytes(Paths.get(listsHome + "/books.json"));
+            byte[] jsonData = Files.readAllBytes(Paths.get(homePath, listsPath, "books.json"));
             ObjectMapper mapper = new ObjectMapper();
             Book[] books = mapper.readValue(jsonData, Book[].class);  
             return books; 

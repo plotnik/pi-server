@@ -1,8 +1,14 @@
 ####### PI SERVER
 
+home:
+    path: /home/pi/
+    
 lists:
-    home: /home/pi/pi-lists/
+    path: pi-lists/
 
+freewriting:
+    path: pi-lists/pages
+    
 ---
 
 ####### LOCAL LINUX
@@ -10,9 +16,15 @@ lists:
 spring:
     profiles: local-linux
 
-lists:
-    home: /mnt/disk2/home/egor/prog/cowon/
+home:
+    path: /media/egor/3fac5c85-a0bd-4626-99ae-a3effcfe6043/home/egor/
 
+lists:
+    path: prog/cowon/
+
+freewriting:
+    path: Документы/Freewriting/pages
+    
 ---
 
 ####### LOCAL MAC
@@ -20,8 +32,13 @@ lists:
 spring:
     profiles: local-mac
 
-lists:
-    home: /Users/eabramovich/Documents/pi/json
+home:
+    path: /Users/eabramovich/Documents/pi/
 
+lists:
+    path: json
+
+freewriting:
+    path: pages
 
 
