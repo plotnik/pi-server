@@ -2,13 +2,13 @@
 
 home:
     path: /home/pi/
-    
+
 lists:
-    path: pi-lists/
+    path: Documents/pi-lists/
 
 freewriting:
-    path: pi-lists/pages
-    
+    path: Documents/pages/
+
 ---
 
 ####### LOCAL LINUX
@@ -24,7 +24,7 @@ lists:
 
 freewriting:
     path: Документы/Freewriting/pages
-    
+
 ---
 
 ####### LOCAL MAC
@@ -36,9 +36,9 @@ home:
     path: /Users/eabramovich/Documents/pi/
 
 lists:
-    path: json
+    path: json/
 
 freewriting:
-    path: pages
+    path: fw/pages/
 
 
