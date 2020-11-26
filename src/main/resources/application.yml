@@ -8,6 +8,7 @@ lists:
 
 freewriting:
     path: Documents/pages/
+    tags: Documents/tags/
 
 ---
 
@@ -23,7 +24,8 @@ lists:
     path: prog/cowon/
 
 freewriting:
-    path: Документы/Freewriting/pages
+    path: Документы/Freewriting/pages/
+    tags: Документы/Freewriting/tags/
 
 ---
 
@@ -40,5 +42,6 @@ lists:
 
 freewriting:
     path: fw/pages/
+    tags: fw/tags/
 
 

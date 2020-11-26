@@ -211,4 +211,8 @@ public class Freewriting {
         // декабрь для корневой папки
         return curMonth == 11 ? year : year - 1;
     }
+
+    List<FwDate> getFWDates() {
+        return fdates;
+    }
 }
