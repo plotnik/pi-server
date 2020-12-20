@@ -1,15 +1,18 @@
 package io.plotnik.piserver.freewriting;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import io.plotnik.piserver.common.ApperyClient;
 import io.plotnik.piserver.common.OpResult;
+import io.swagger.annotations.ApiOperation;
+import io.swagger.annotations.ApiParam;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -21,13 +24,10 @@ import java.nio.file.Paths;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.time.format.DateTimeParseException;
-import java.util.ArrayList;
-import java.util.Collections;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
-import java.util.Optional;
 import java.util.Set;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
@@ -40,6 +40,8 @@ public class FwController {
 
     private static final Logger log = LoggerFactory.getLogger(FwController.class);
 
+    DateTimeFormatter df = DateTimeFormatter.ofPattern("yyyy-MM-dd");
+
     @Value("${home.path}")
     private String homePath;
 
@@ -48,6 +50,9 @@ public class FwController {
 
     @Value("${freewriting.tags}")
     private String tagsPath;
+
+    @Autowired
+    ApperyClient apperyClient;
 
     /**
      * База фрирайтов.
@@ -64,9 +69,11 @@ public class FwController {
      */
     Map<String, String> tags = new HashMap<>();
 
+    /**
+     * Маппинг фрирайта на хэштег.
+     */
     Map<LocalDate, Set<String>> noteTags = new HashMap<>();
 
-    DateTimeFormatter df = DateTimeFormatter.ofPattern("yyyy-MM-dd");
 
     /**
      * Предзагрузка.
@@ -104,10 +111,9 @@ public class FwController {
         }
     }
 
-    /**
-     * Получить фрирайт по дате.
-     */
+
     @GetMapping()
+    @ApiOperation(value = "Получить фрирайт по дате.")
     public FwNote getNote(@RequestParam(name = "d", defaultValue = "") String datestr) {
         FwNote res = new FwNote();
         try {
@@ -125,24 +131,37 @@ public class FwController {
         return res;
     }
 
+
     @GetMapping(value = "/tags")
-    public List<String> getTags(@RequestParam(name = "f", defaultValue = "") String filterstr) {
+    @ApiOperation(value = "Вернуть список имеющихся названий тэгов, " +
+                          "возможно отфильтрованный по заданной строке.")
+    public List<String> getTags(
+        @ApiParam(value = "Фильтр на имена тэгов")
+        @RequestParam(name = "f", defaultValue = "") String filterstr)
+    {
         Stream<String> stm = tags.keySet().stream();
         if (filterstr.length() > 0) {
             String lostr = filterstr.toLowerCase();
             stm = stm.filter(s -> s.toLowerCase().contains(lostr));
         }
         return stm.sorted().collect(Collectors.toList());
-        /*
-        List<String> res = new ArrayList<>(tags.keySet());
-        Collections.sort(res);
-        return res;
-        */
     }
 
+
+    @GetMapping(value = "/loadNoteTags")
+    @ApiOperation(value = "Загрузить маппинги фрирайтов на хэштеги из Аппери.")
+    public OpResult loadNoteTags() {
+        apperyClient.loadNoteTags();
+        return null;
+    }
+
+
+    @ApiOperation(value = "Добавление хэштэга фрирайту")
     @PostMapping(value = "{d}/tag/{t}")
-    public OpResult addTagToNote(@PathVariable String d,
-                                 @PathVariable String t) {
+    public OpResult addTagToNote(
+        @ApiParam(value = "Дата фрирайта в формате `yyyy-MM-dd`") @PathVariable String d,
+        @ApiParam(value = "Имя хэштэга") @PathVariable String t)
+    {
 
         /* Проверить, что хэштэг существует
          */
@@ -171,7 +190,7 @@ public class FwController {
         }
         tagList.add(t);
 
-        return new OpResult(true);
+        return apperyClient.updateTagList(d, tagList);
     }
 
 }
