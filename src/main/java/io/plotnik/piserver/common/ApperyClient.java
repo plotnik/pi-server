@@ -110,14 +110,17 @@ public class ApperyClient {
         }
     }
 
-    public void loadNoteTags() {
+    public ApperyTag[] loadNoteTags() {
         try {
-            Content result = Request.get(getApperyUriBuilder().build())
-                .execute().returnContent();
-            log.info(result.toString());
+            String findResStr = Request.get(getApperyUriBuilder().build())
+                .addHeader("X-Appery-Database-Id", dbId)
+                .execute().returnContent().asString();
+            log_str(findResStr, "findResStr");
+            return om.readValue(findResStr, ApperyTag[].class);
 
         } catch (IOException | URISyntaxException e) {
             e.printStackTrace();
+            return null;
         }
     }
 }

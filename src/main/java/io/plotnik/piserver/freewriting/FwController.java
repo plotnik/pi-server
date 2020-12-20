@@ -34,6 +34,9 @@ import java.util.stream.Stream;
 
 import javax.annotation.PostConstruct;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
+
 @RestController
 @RequestMapping("/fw")
 public class FwController {
@@ -74,6 +77,7 @@ public class FwController {
      */
     Map<LocalDate, Set<String>> noteTags = new HashMap<>();
 
+    ObjectMapper om = new ObjectMapper();
 
     /**
      * Предзагрузка.
@@ -94,10 +98,10 @@ public class FwController {
             /* Загрузить тэги
              */
             File[] tagFiles = new File(homePath + tagsPath).listFiles();
-            for (File tf: tagFiles) {
+            for (File tf : tagFiles) {
                 if (tf.isFile() && tf.getName().endsWith(".md")) {
                     String url = Files.readString(Paths.get(tf.getPath()));
-                    String name = tf.getName().substring(0, tf.getName().length()-3);
+                    String name = tf.getName().substring(0, tf.getName().length() - 3);
                     tags.put(name, url);
                 }
             }
@@ -111,10 +115,11 @@ public class FwController {
         }
     }
 
-
     @GetMapping()
     @ApiOperation(value = "Получить фрирайт по дате.")
-    public FwNote getNote(@RequestParam(name = "d", defaultValue = "") String datestr) {
+    public FwNote getNote(
+        @ApiParam(value = "Дата фрирайта в формате `yyyy-MM-dd`") @RequestParam(name = "d", defaultValue = "") String datestr)
+    {
         FwNote res = new FwNote();
         try {
             LocalDate d = LocalDate.parse(datestr, df);
@@ -123,22 +128,24 @@ public class FwController {
                 return null;
             }
             res.setText(Files.readString(Paths.get(w.getPath().getPath())));
+            Set<String> dd = noteTags.get(d);
+            if (dd != null) {
+                Set<FwTag> tt = dd.stream()
+                    .map(name -> new FwTag(name, tags.get(name)))
+                    .collect(Collectors.toSet());
+                res.setTags(tt);
+            }
 
-        } catch (DateTimeParseException e) {
-        } catch (IOException e) {
+        } catch (DateTimeParseException | IOException e) {
+            e.printStackTrace();
         }
-
         return res;
     }
 
-
     @GetMapping(value = "/tags")
-    @ApiOperation(value = "Вернуть список имеющихся названий тэгов, " +
-                          "возможно отфильтрованный по заданной строке.")
+    @ApiOperation(value = "Вернуть список имеющихся названий тэгов, " + "возможно отфильтрованный по заданной строке.")
     public List<String> getTags(
-        @ApiParam(value = "Фильтр на имена тэгов")
-        @RequestParam(name = "f", defaultValue = "") String filterstr)
-    {
+            @ApiParam(value = "Фильтр на имена тэгов") @RequestParam(name = "f", defaultValue = "") String filterstr) {
         Stream<String> stm = tags.keySet().stream();
         if (filterstr.length() > 0) {
             String lostr = filterstr.toLowerCase();
@@ -147,12 +154,38 @@ public class FwController {
         return stm.sorted().collect(Collectors.toList());
     }
 
-
     @GetMapping(value = "/loadNoteTags")
     @ApiOperation(value = "Загрузить маппинги фрирайтов на хэштеги из Аппери.")
     public OpResult loadNoteTags() {
-        apperyClient.loadNoteTags();
-        return null;
+        try {
+            /* Загрузить хэштеги из Аппери.
+            */
+            ApperyTag[] apperyTags = apperyClient.loadNoteTags();
+
+            for (ApperyTag atag : apperyTags) {
+
+                /* Распарсить дату.
+                */
+                LocalDate date = LocalDate.parse(atag.getDstamp(), df);
+
+                /* Добавить хэштег в маппинг.
+                */
+                Set<String> tagList = noteTags.get(date);
+                if (tagList == null) {
+                    tagList = new HashSet<>();
+                    noteTags.put(date, tagList);
+                }
+                String[] strarr = om.readValue(atag.getObj(), String[].class);
+                for (String t : strarr) {
+                    tagList.add(t);
+                }
+            }
+            return new OpResult(true);
+
+        } catch (JsonProcessingException e) {
+            e.printStackTrace();
+            return new OpResult(false);
+        }
     }
 
 

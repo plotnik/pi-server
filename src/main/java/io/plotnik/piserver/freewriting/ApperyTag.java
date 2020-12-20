@@ -6,7 +6,7 @@ public class ApperyTag {
 
     private String dstamp;
 
-    private Object obj;
+    private String obj;
 
     private String _createdAt;
 
@@ -28,14 +28,6 @@ public class ApperyTag {
         this.dstamp = dstamp;
     }
 
-    public Object getObj() {
-        return obj;
-    }
-
-    public void setObj(Object obj) {
-        this.obj = obj;
-    }
-
     public String get_createdAt() {
         return _createdAt;
     }
@@ -50,6 +42,14 @@ public class ApperyTag {
 
     public void set_updatedAt(String _updatedAt) {
         this._updatedAt = _updatedAt;
+    }
+
+    public String getObj() {
+        return obj;
+    }
+
+    public void setObj(String obj) {
+        this.obj = obj;
     }
 
 }
