@@ -88,6 +88,7 @@ public class FwController {
             /* Загрузить фрирайты
              */
             fw = new Freewriting(homePath + fwPath);
+            log.info("[SUCCESS] " + fw.getFWDates().size() + " notes loaded");
 
             /* Замапить даты во фрирайты для более быстрого доступа
              */
@@ -125,7 +126,7 @@ public class FwController {
             LocalDate d = LocalDate.parse(datestr, df);
             FwDate w = fmap.get(d);
             if (w == null) {
-                return null;
+                return res;
             }
             res.setText(Files.readString(Paths.get(w.getPath().getPath())));
             Set<String> dd = noteTags.get(d);
