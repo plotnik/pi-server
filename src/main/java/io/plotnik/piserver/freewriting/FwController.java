@@ -85,33 +85,48 @@ public class FwController {
     @PostConstruct
     public void init() {
         try {
-            /* Загрузить фрирайты
-             */
-            fw = new Freewriting(homePath + fwPath);
-            log.info("[SUCCESS] " + fw.getFWDates().size() + " notes loaded");
-
-            /* Замапить даты во фрирайты для более быстрого доступа
-             */
-            for (FwDate w : fw.getFWDates()) {
-                fmap.put(w.getDate(), w);
-            }
-
-            /* Загрузить тэги
-             */
-            File[] tagFiles = new File(homePath + tagsPath).listFiles();
-            for (File tf : tagFiles) {
-                if (tf.isFile() && tf.getName().endsWith(".md")) {
-                    String url = Files.readString(Paths.get(tf.getPath()));
-                    String name = tf.getName().substring(0, tf.getName().length() - 3);
-                    tags.put(name, url);
-                }
-            }
-
+            reload();
         } catch (Exception e) {
             if (e instanceof FwException) {
                 log.warn("[FW Exception] " + e.getMessage());
             } else {
                 e.printStackTrace();
+            }
+        }
+    }
+
+    @GetMapping(value = "/reload")
+    @ApiOperation(value = "Переагрузить фрирайты из папки.")
+    public OpResult reloadNotes() {
+        try {
+            reload();
+            return new OpResult(true, fw.getFWDates().size() + " notes loaded");
+
+        } catch (Exception e) {
+            return new OpResult(false, e.getMessage());
+        }
+    }
+
+    void reload() throws FwException, IOException {
+        /* Загрузить фрирайты
+         */
+        fw = new Freewriting(homePath + fwPath);
+        log.info("[SUCCESS] " + fw.getFWDates().size() + " notes loaded");
+
+        /* Замапить даты во фрирайты для более быстрого доступа
+         */
+        for (FwDate w : fw.getFWDates()) {
+            fmap.put(w.getDate(), w);
+        }
+
+        /* Загрузить тэги
+         */
+        File[] tagFiles = new File(homePath + tagsPath).listFiles();
+        for (File tf : tagFiles) {
+            if (tf.isFile() && tf.getName().endsWith(".md")) {
+                String url = Files.readString(Paths.get(tf.getPath()));
+                String name = tf.getName().substring(0, tf.getName().length() - 3);
+                tags.put(name, url);
             }
         }
     }
@@ -188,7 +203,6 @@ public class FwController {
             return new OpResult(false);
         }
     }
-
 
     @ApiOperation(value = "Добавление хэштэга фрирайту")
     @PostMapping(value = "{d}/tag/{t}")

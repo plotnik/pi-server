@@ -135,8 +135,8 @@ public class Freewriting {
             if (f.isDirectory()) {
                 continue;
             }
-            if (!f.getName().endsWith(".md")) {
-                throw new FwException("I EXPECT THE FOLDER TO CONTAIN ONLY '.md' FILES");
+            if (!(f.getName().endsWith(".md"))) {
+                throw new FwException("I EXPECT THE FOLDER TO CONTAIN ONLY '.md' FILES: " + f.getName());
             }
 
             /* Преобразовать имя файла фрирайта в дату
