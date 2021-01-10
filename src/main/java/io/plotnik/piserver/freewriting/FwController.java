@@ -210,7 +210,7 @@ public class FwController {
     @ApiOperation(value = "Изменить теги для фрирайта")
     @PostMapping(value = "/updateNoteTags")
     public OpResult updateNoteTags(
-        @ApiParam(value = "Дата фрирайта в формате `yyyy-MM-dd`") @RequestParam(name = "d", defaultValue = "") String datestr,
+        @ApiParam(value = "Дата фрирайта в формате `yyyy-MM-dd`") @RequestParam(name = "d") String datestr,
         @ApiParam(value = "Список тэгов") @RequestBody List<String> newTags)
     {
         /* Проверить, что фрирайт существует.
