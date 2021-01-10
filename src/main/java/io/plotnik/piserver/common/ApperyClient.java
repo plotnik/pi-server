@@ -53,9 +53,9 @@ public class ApperyClient {
     }
 
     void log_str(String str, String title) {
-        log.info("------------------ " + title);
-        log.info(str);
-        log.info("------------------");
+        log.info("\n---------- " + title + ": " + str);
+        //log.info(str);
+        //log.info("----------");
     }
 
     /**
