@@ -2,9 +2,11 @@ package io.plotnik.piserver.freewriting;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
@@ -68,7 +70,7 @@ public class FwController {
     Map<LocalDate, FwDate> fmap = new HashMap<>();
 
     /**
-     * Маппинг хэштэга на URL.
+     * Маппинг тэга на URL.
      */
     Map<String, String> tags = new HashMap<>();
 
@@ -86,6 +88,7 @@ public class FwController {
     public void init() {
         try {
             reload();
+            loadNoteTags();
         } catch (Exception e) {
             if (e instanceof FwException) {
                 log.warn("[FW Exception] " + e.getMessage());
@@ -159,7 +162,7 @@ public class FwController {
     }
 
     @GetMapping(value = "/tags")
-    @ApiOperation(value = "Вернуть список имеющихся названий тэгов, " + "возможно отфильтрованный по заданной строке.")
+    @ApiOperation(value = "Вернуть список имеющихся названий тэгов, возможно отфильтрованный по заданной строке.")
     public List<String> getTags(
             @ApiParam(value = "Фильтр на имена тэгов") @RequestParam(name = "f", defaultValue = "") String filterstr) {
         Stream<String> stm = tags.keySet().stream();
@@ -171,7 +174,7 @@ public class FwController {
     }
 
     @GetMapping(value = "/loadNoteTags")
-    @ApiOperation(value = "Загрузить маппинги фрирайтов на хэштеги из Аппери.")
+    @ApiOperation(value = "Загрузить маппинг \"фрирайт -> теги\" из Аппери.")
     public OpResult loadNoteTags() {
         try {
             /* Загрузить хэштеги из Аппери.
@@ -204,24 +207,17 @@ public class FwController {
         }
     }
 
-    @ApiOperation(value = "Добавление хэштэга фрирайту")
-    @PostMapping(value = "{d}/tag/{t}")
-    public OpResult addTagToNote(
-        @ApiParam(value = "Дата фрирайта в формате `yyyy-MM-dd`") @PathVariable String d,
-        @ApiParam(value = "Имя хэштэга") @PathVariable String t)
+    @ApiOperation(value = "Изменить теги для фрирайта")
+    @PostMapping(value = "/updateNoteTags")
+    public OpResult updateNoteTags(
+        @ApiParam(value = "Дата фрирайта в формате `yyyy-MM-dd`") @RequestParam(name = "d", defaultValue = "") String datestr,
+        @ApiParam(value = "Список тэгов") @RequestBody List<String> newTags)
     {
-
-        /* Проверить, что хэштэг существует
-         */
-        if (tags.get(t) == null) {
-            return new OpResult(false, "Unknown tag");
-        }
-
         /* Проверить, что фрирайт существует.
          */
         LocalDate date = null;
         try {
-            date = LocalDate.parse(d, df);
+            date = LocalDate.parse(datestr, df);
         } catch (DateTimeParseException e) {
             return new OpResult(false, "Invalid date format");
         }
@@ -229,16 +225,18 @@ public class FwController {
             return new OpResult(false, "Unknown note");
         }
 
-        /* Добавить хэштег в маппинг.
+        /* Установить тэги в маппинге.
          */
-        Set<String> tagList = noteTags.get(date);
-        if (tagList == null) {
-            tagList = new HashSet<>();
-            noteTags.put(date, tagList);
+        Set<String> tagList = new HashSet<>();
+        for (String t : newTags) {
+            String url = tags.get(t);
+            if (url == null) {
+                return new OpResult(false, "Unknown tag " + t);
+            }
+            tagList.add(t);
         }
-        tagList.add(t);
-
-        return apperyClient.updateTagList(d, tagList);
+        noteTags.put(date, tagList);
+        return apperyClient.updateTagList(datestr, tagList);
     }
 
-}
+ }

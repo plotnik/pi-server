@@ -59,7 +59,7 @@ public class ApperyClient {
     }
 
     /**
-     * Создать хэштег в базе Аппери.
+     * Изменить теги для фрирайта в базе Аппери.
      */
     public OpResult updateTagList(String dstamp, Set<String> tagList) {
         try {
