@@ -147,6 +147,7 @@ public class FwController {
                 return res;
             }
             res.setText(Files.readString(Paths.get(w.getPath().getPath())));
+            res.setDateStr(Freewriting.nameFormat(d));
             Set<String> dd = noteTags.get(d);
             if (dd != null) {
                 Set<FwTag> tt = dd.stream()

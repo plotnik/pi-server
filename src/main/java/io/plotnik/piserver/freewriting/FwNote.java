@@ -6,6 +6,8 @@ public class FwNote {
 
     String text;
 
+    String dateStr;
+
     Set<FwTag> tags;
 
     public String getText() {
@@ -22,6 +24,14 @@ public class FwNote {
 
     public void setTags(Set<FwTag> tags) {
         this.tags = tags;
+    }
+
+    public String getDateStr() {
+        return dateStr;
+    }
+
+    public void setDateStr(String dateStr) {
+        this.dateStr = dateStr;
     }
 
 }

@@ -37,7 +37,7 @@ public class Freewriting {
     /**
      * Hазвания месяцев с падежами.
      */
-    List<String> monthNames = Arrays.asList(new String[]{
+    static List<String> monthNames = Arrays.asList(new String[]{
         "января", "февраля", "марта", "апреля", "мая", "июня",
         "июля", "августа", "сентября", "октября", "ноября", "декабря"});
 
@@ -57,8 +57,9 @@ public class Freewriting {
     LocalDate start;
 
     Calendar cal = Calendar.getInstance();
-    DateTimeFormatter df = DateTimeFormatter.ofPattern("yyyy-MM-dd");
-    DateTimeFormatter weekDayFormat = DateTimeFormatter.ofPattern("EE", new Locale("ru"));
+
+    static DateTimeFormatter df = DateTimeFormatter.ofPattern("yyyy-MM-dd");
+    static DateTimeFormatter weekDayFormat = DateTimeFormatter.ofPattern("EE", new Locale("ru"));
 
     /**
      * Мы загрузим все имеющиеся файлы `.md`
@@ -187,7 +188,7 @@ public class Freewriting {
     /**
      * Вернуть дату в формате фрирайта, например `13 мая сб`
      */
-    String nameFormat(LocalDate date) {
+    static String nameFormat(LocalDate date) {
         String weekDay = weekDayFormat.format(date).toLowerCase();
         return date.getDayOfMonth() + " "
                 + monthNames.get(date.getMonthValue() - 1) + " " + weekDay;
