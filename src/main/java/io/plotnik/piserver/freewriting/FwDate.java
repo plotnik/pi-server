@@ -2,8 +2,15 @@ package io.plotnik.piserver.freewriting;
 
 import java.io.File;
 import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
+import java.time.format.DateTimeParseException;
 
+/**
+ * Ссылка на файл фрирайта.
+ */
 public class FwDate {
+
+    private static DateTimeFormatter df = DateTimeFormatter.ofPattern("yyyy-MM-dd");
 
     LocalDate date;
     File path;
@@ -27,4 +34,11 @@ public class FwDate {
         return root;
     }
 
+    public static LocalDate parse(String datestr) throws DateTimeParseException {
+        return LocalDate.parse(datestr, df);
+    }
+
+    public static String format(LocalDate date) {
+        return df.format(date);
+    }
 }
