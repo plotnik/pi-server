@@ -1,4 +1,4 @@
-package io.plotnik.piserver.freewriting;
+package io.plotnik.piserver.freewriting.dao;
 
 public class FwTag {
 

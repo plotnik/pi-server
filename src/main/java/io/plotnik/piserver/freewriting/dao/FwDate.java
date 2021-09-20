@@ -1,4 +1,4 @@
-package io.plotnik.piserver.freewriting;
+package io.plotnik.piserver.freewriting.dao;
 
 import java.io.File;
 import java.time.LocalDate;

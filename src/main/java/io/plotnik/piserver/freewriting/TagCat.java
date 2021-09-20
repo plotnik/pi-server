@@ -5,6 +5,7 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.time.LocalDate;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
@@ -17,13 +18,18 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 
 import io.plotnik.piserver.common.ApperyClient;
 import io.plotnik.piserver.common.OpResult;
+import io.plotnik.piserver.freewriting.dao.ApperyTag;
+import io.plotnik.piserver.freewriting.dao.FwDate;
+import io.plotnik.piserver.freewriting.dao.FwTag;
 
 /**
  * Работа с тэгами.
  */
+@Service
 public class TagCat {
 
     @Autowired
@@ -41,6 +47,15 @@ public class TagCat {
      */
     private Map<LocalDate, Set<String>> noteToTags = new HashMap<>();
 
+    /**
+     * Маппинг тэга на категории.
+     */
+    private Map<String, Set<String>> tagToCats = new HashMap<>();
+
+    /**
+     * Маппинг категории на тэги.
+     */
+    private Map<String, Set<String>> catToTags = new HashMap<>();
 
     /**
      * Вернуть список имеющихся названий тэгов,
@@ -105,14 +120,18 @@ public class TagCat {
     }
 
     /**
-     * Веррнуть тэги для указанного фрирайта.
+     * Вернуть тэги для указанного фрирайта.
      */
     public Set<FwTag> getNoteTags(LocalDate d) {
         Set<String> dd = noteToTags.get(d);
         Set<FwTag> tt = null;
         if (dd != null) {
+            /* Пройти по списку тэгов для фрирайта.
+             */
             tt = dd.stream()
-                .map(name -> new FwTag(name, tagToUrl.get(name)))
+                .map(name -> {
+                    return new FwTag(name, tagToUrl.get(name));
+                })
                 .collect(Collectors.toSet());
         }
         return tt;
@@ -121,14 +140,65 @@ public class TagCat {
     /**
      * Загрузить тэги
      */
-    public void loadTagDefinitions(String tagFolderPath) throws IOException {
+    public void loadTagDefinitions(String tagFolderPath) throws IOException, FwException {
         File[] tagFiles = new File(tagFolderPath).listFiles();
         for (File tf : tagFiles) {
             if (tf.isFile() && tf.getName().endsWith(".md")) {
-                String url = Files.readString(Paths.get(tf.getPath()));
+                /* Получить название тэга из имени файла.
+                 */
                 String tag = tf.getName().substring(0, tf.getName().length() - 3);
+
+                String url = null;
+                List<String> lines = Files.readAllLines(Paths.get(tf.getPath()));
+                for (String line: lines) {
+                    String ln = line.trim();
+                    if (ln.length() > 0) {
+                        if (ln.startsWith("#")) {
+                            String cat = ln.substring(1);
+                            addTagCategory(tag, cat);
+                        } else {
+                            url = ln;
+                        }
+                    }
+                }
+                if (url == null) {
+                    throw new FwException("URL not found in tag: " + tag);
+                }
+
                 tagToUrl.put(tag, url);
             }
         }
     }
+
+    private void addTagCategory(String tag, String cat) {
+        Set<String> cats = tagToCats.get(tag);
+        if (cats == null) {
+            cats = new HashSet<>();
+            tagToCats.put(tag, cats);
+        }
+        cats.add(cat);
+
+        Set<String> tags = catToTags.get(cat);
+        if (tags == null) {
+            tags = new HashSet<>();
+            catToTags.put(cat, tags);
+        }
+        tags.add(tag);
+    }
+
+    /**
+     * Вернуть список тэгов с линками, принадлежащих указанной категории
+     */
+    public List<FwTag> getTagsByCategory(String cat) {
+        Set<String> tags = catToTags.get(cat);
+        if (tags != null) {
+            return tags.stream().map(name -> {
+                return new FwTag(name, tagToUrl.get(name));
+            })
+            .collect(Collectors.toList());
+        } else {
+            return new ArrayList<>();
+        }
+    }
+
 }

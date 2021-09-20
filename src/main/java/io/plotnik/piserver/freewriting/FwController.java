@@ -1,5 +1,6 @@
 package io.plotnik.piserver.freewriting;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -9,6 +10,10 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import io.plotnik.piserver.common.OpResult;
+import io.plotnik.piserver.freewriting.dao.FwDate;
+import io.plotnik.piserver.freewriting.dao.FwNote;
+import io.plotnik.piserver.freewriting.dao.FwTag;
+
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
 
@@ -53,7 +58,8 @@ public class FwController {
      */
     Map<LocalDate, FwDate> fmap = new HashMap<>();
 
-    TagCat tagCat = new TagCat();
+    @Autowired
+    TagCat tagCat;
 
     /**
      * Предзагрузка.
@@ -73,7 +79,7 @@ public class FwController {
     }
 
     @GetMapping(value = "/reload")
-    @ApiOperation(value = "Переагрузить фрирайты из папки.")
+    @ApiOperation(value = "Перезагрузить фрирайты из папки.")
     public OpResult reloadNotes() {
         try {
             reload();
@@ -126,10 +132,17 @@ public class FwController {
     }
 
     @GetMapping(value = "/tags")
-    @ApiOperation(value = "Вернуть список имеющихся названий тэгов, возможно отфильтрованный по заданной строке.")
+    @ApiOperation(value = "Вернуть список тэгов, возможно отфильтрованный по заданной строке.")
     public List<String> getFilteredTags(
             @ApiParam(value = "Фильтр на имена тэгов") @RequestParam(name = "f", defaultValue = "") String filterstr) {
         return tagCat.getFilteredTags(filterstr);
+    }
+
+    @GetMapping(value = "/ctags")
+    @ApiOperation(value = "Вернуть список тэгов, принадлежащих указанной категории")
+    public List<FwTag> getTagsByCategory(
+            @ApiParam(value = "Категория тэгов") @RequestParam(name = "c") String cat) {
+        return tagCat.getTagsByCategory(cat);
     }
 
     @GetMapping(value = "/loadNoteTags")

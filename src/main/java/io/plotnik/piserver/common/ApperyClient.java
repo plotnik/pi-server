@@ -3,7 +3,7 @@ package io.plotnik.piserver.common;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
-import io.plotnik.piserver.freewriting.ApperyTag;
+import io.plotnik.piserver.freewriting.dao.ApperyTag;
 
 import java.io.IOException;
 import java.net.URISyntaxException;
