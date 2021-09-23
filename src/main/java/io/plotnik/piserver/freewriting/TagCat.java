@@ -154,7 +154,7 @@ public class TagCat {
                     String ln = line.trim();
                     if (ln.length() > 0) {
                         if (ln.startsWith("#")) {
-                            String cat = ln.substring(1);
+                            String cat = ln.substring(1).trim();
                             addTagCategory(tag, cat);
                         } else {
                             url = ln;
