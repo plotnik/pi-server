@@ -37,17 +37,17 @@ public class CowonController {
     static final Logger logger = Logger.getLogger(CowonController.class.getName());
 
     @Value("${home.path}")
-    private String homePath;  
+    private String homePath;
 
     @Value("${lists.path}")
-    private String listsPath;  
+    private String listsPath;
 
     List<CowonAlbum> jalbums;
     Map<String, CowonHistory> history;
 
     @PostConstruct
     public void init() {
-        reload();
+        //reload();
     }
 
     @RequestMapping(value = "/cowon", method = RequestMethod.GET)

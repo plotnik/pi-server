@@ -6,6 +6,7 @@ import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.time.LocalDate;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
@@ -170,6 +171,9 @@ public class TagCat {
         }
     }
 
+    /**
+     * Мы поддерживаем двустороннюю связку между тзгами и категориями
+     */
     private void addTagCategory(String tag, String cat) {
         Set<String> cats = tagToCats.get(tag);
         if (cats == null) {
@@ -199,6 +203,17 @@ public class TagCat {
         } else {
             return new ArrayList<>();
         }
+    }
+
+    /**
+     * Вернуть список категорий, отсортированный по алфавиту
+     */
+    public List<String> getCategories() {
+        //System.out.println("catToTags: " + catToTags.size());
+        //System.out.println("tagToCats: " + tagToCats.size());
+        List<String> cats = new ArrayList<>(catToTags.keySet());
+        Collections.sort(cats);
+        return cats;
     }
 
 }

@@ -145,6 +145,12 @@ public class FwController {
         return tagCat.getTagsByCategory(cat);
     }
 
+    @GetMapping(value = "/cats")
+    @ApiOperation(value = "Вернуть список категорий")
+    public List<String> getCategories() {
+        return tagCat.getCategories();
+    }
+
     @GetMapping(value = "/loadNoteTags")
     @ApiOperation(value = "Загрузить маппинг \"фрирайт -> теги\" из Аппери.")
     public OpResult loadNoteTags() {
