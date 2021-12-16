@@ -202,8 +202,8 @@ public class Freewriting {
      * Для всех месяцев мы считаем год равным текущему году,
      * но для декабря это может быть прошлый год.
      * @param year      Год для всей папки
-     * @param month     Месяц для файла фрирайта
-     * @param curMonth  Текущий месяц
+     * @param month     Месяц для файла фрирайта, 0..11
+     * @param curMonth  Текущий месяц, 1..12
      * @return          Год для файла фрирайта
      */
     int handleDecember(int year, int month, int curMonth) {
