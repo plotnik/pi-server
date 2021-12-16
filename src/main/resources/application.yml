@@ -22,7 +22,7 @@ spring:
     profiles: local-linux
 
 home:
-    path: /media/egor/3fac5c85-a0bd-4626-99ae-a3effcfe6043/home/egor/
+    path: /data/home/egor/
 
 lists:
     path: prog/cowon/
