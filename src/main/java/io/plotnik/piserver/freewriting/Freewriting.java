@@ -167,6 +167,8 @@ public class Freewriting {
                 throw new FwException("MONTH NAME MISSPELLED IN FILE: " + fileName);
             }
 
+            //log.info("year, month, curMonth: " + year + "," + month + "," + curMonth);
+            //log.info("handleDecember: " + handleDecember(year, month, curMonth));
             String datestr = String.format("%4d-%02d-%02d", handleDecember(year, month, curMonth), (month + 1), day);
             LocalDate date = LocalDate.parse(datestr, df);
             fdates.add(new FwDate(date, f, (curMonth != -1)));
@@ -212,7 +214,7 @@ public class Freewriting {
             return year - 1;
         }
         // декабрь для корневой папки
-        return curMonth == 11 ? year : year - 1;
+        return curMonth == 12 ? year : year - 1;
     }
 
     List<FwDate> getFWDates() {
