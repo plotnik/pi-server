@@ -69,8 +69,8 @@ public class FwController {
     @PostConstruct
     public void init() {
         try {
-            reload();
-            loadNoteTags();
+            reloadNotes();
+            reloadTags();
         } catch (Exception e) {
             if (e instanceof FwException) {
                 log.warn("[FW Exception] " + e.getMessage());
@@ -80,11 +80,11 @@ public class FwController {
         }
     }
 
-    @GetMapping(value = "/reload")
+    @GetMapping(value = "/reloadNotes")
     @ApiOperation(value = "Перезагрузить фрирайты из папки.")
-    public OpResult reloadNotes() {
+    public OpResult reloadFwNotes() {
         try {
-            reload();
+            reloadNotes();
             return new OpResult(true, fw.getFWDates().size() + " notes loaded");
 
         } catch (Exception e) {
@@ -92,7 +92,7 @@ public class FwController {
         }
     }
 
-    void reload() throws FwException, IOException {
+    void reloadNotes() throws FwException, IOException {
         /* Загрузить фрирайты
          */
         fw = new Freewriting(homePath + fwPath);
@@ -150,14 +150,14 @@ public class FwController {
     }
 
     @GetMapping(value = "/{tag}")
-    @ApiOperation(value = "Получить фрирайты по тэгу.")
-    public List<FwNote> getNotesByTag(
+    @ApiOperation(value = "Получить даты фрирайтов по тэгу.")
+    public List<String> getNotesByTag(
         @ApiParam(value = "Название тэга") @PathVariable String tag)
     {
-        List<FwNote> result = new ArrayList<>();
+        List<String> result = new ArrayList<>();
         List<LocalDate> dates = tagCat.getDatesByTag(tag);
         for (LocalDate d: dates) {
-            result.add(loadNoteByDate(d));
+            result.add(FwDate.format(d));
         }
         return result;
     }
@@ -182,9 +182,9 @@ public class FwController {
         return tagCat.getCategories();
     }
 
-    @GetMapping(value = "/loadNoteTags")
-    @ApiOperation(value = "Загрузить маппинг \"фрирайт -> теги\" из Аппери.")
-    public OpResult loadNoteTags() {
+    @GetMapping(value = "/reloadTags")
+    @ApiOperation(value = "Перезагрузить соответствие между фрирайтами и тегами из Аппери.")
+    public OpResult reloadTags() {
         return tagCat.loadNoteToTagsMapping();
     }
 
