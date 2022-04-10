@@ -14,7 +14,7 @@ import io.plotnik.piserver.common.OpResult;
 import io.plotnik.piserver.freewriting.dao.FwDate;
 import io.plotnik.piserver.freewriting.dao.FwNote;
 import io.plotnik.piserver.freewriting.dao.FwTag;
-
+import io.plotnik.piserver.freewriting.dao.UpdateTagsRequest;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
 
@@ -190,15 +190,13 @@ public class FwController {
 
     @ApiOperation(value = "Изменить теги для фрирайта")
     @PostMapping(value = "/updateNoteTags")
-    public OpResult updateNoteTags(
-        @ApiParam(value = "Дата фрирайта в формате `yyyy-MM-dd`") @RequestParam(name = "d") String datestr,
-        @ApiParam(value = "Список тэгов") @RequestBody List<String> newTags)
+    public OpResult updateNoteTags(@RequestBody UpdateTagsRequest req)
     {
         /* Проверить, что фрирайт существует.
          */
         LocalDate date = null;
         try {
-            date = FwDate.parse(datestr);
+            date = FwDate.parse(req.getD());
         } catch (DateTimeParseException e) {
             return new OpResult(false, "Invalid date format");
         }
@@ -206,7 +204,7 @@ public class FwController {
             return new OpResult(false, "Unknown note");
         }
 
-        return tagCat.updateNoteTags(date, newTags);
+        return tagCat.updateNoteTags(date, req.getNewTags());
     }
 
  }
