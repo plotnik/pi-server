@@ -25,6 +25,7 @@ import io.plotnik.piserver.common.ApperyClient;
 import io.plotnik.piserver.common.OpResult;
 import io.plotnik.piserver.freewriting.dao.ApperyTag;
 import io.plotnik.piserver.freewriting.dao.FwDate;
+import io.plotnik.piserver.freewriting.dao.FwNote;
 import io.plotnik.piserver.freewriting.dao.FwTag;
 
 /**
@@ -214,6 +215,19 @@ public class TagCat {
         List<String> cats = new ArrayList<>(catToTags.keySet());
         Collections.sort(cats);
         return cats;
+    }
+
+    /**
+     * Получить даты фрирайтов по тэгу
+     */
+    public List<LocalDate> getDatesByTag(String tag) {
+        ArrayList<LocalDate> result = new ArrayList<>();
+        noteToTags.entrySet().stream().forEach(entry -> {
+            if (entry.getValue().contains(tag)) {
+                result.add(entry.getKey());
+            }
+        });
+        return result;
     }
 
 }

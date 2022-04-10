@@ -3,6 +3,7 @@ package io.plotnik.piserver.freewriting;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -25,6 +26,7 @@ import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.time.LocalDate;
 import java.time.format.DateTimeParseException;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -110,25 +112,54 @@ public class FwController {
     public FwNote getNote(
         @ApiParam(value = "Дата фрирайта в формате `yyyy-MM-dd`") @RequestParam(name = "d", defaultValue = "") String datestr)
     {
-        FwNote res = new FwNote();
         try {
             /* Проверить что фрирайт для указанной даты существует,
                иначе вернуть пустую запись.
              */
             LocalDate d = FwDate.parse(datestr);
-            FwDate w = fmap.get(d);
-            if (w == null) {
-                return res;
-            }
 
+            FwNote result = loadNoteByDate(d);
+            if (result == null) {
+                result = new FwNote();
+            }
+            return result;
+
+        } catch (DateTimeParseException e) {
+            e.printStackTrace();
+            return new FwNote();
+        }
+
+    }
+
+    FwNote loadNoteByDate(LocalDate d) {
+        FwDate w = fmap.get(d);
+        if (w == null) {
+            return null;
+        }
+
+        FwNote res = new FwNote();
+        try {
             res.setText(Files.readString(Paths.get(w.getPath().getPath())));
             res.setDateStr(Freewriting.nameFormat(d));
             res.setTags(tagCat.getNoteTags(d));
 
-        } catch (DateTimeParseException | IOException e) {
+        } catch (IOException e) {
             e.printStackTrace();
         }
         return res;
+    }
+
+    @GetMapping(value = "/{tag}")
+    @ApiOperation(value = "Получить фрирайты по тэгу.")
+    public List<FwNote> getNotesByTag(
+        @ApiParam(value = "Название тэга") @PathVariable String tag)
+    {
+        List<FwNote> result = new ArrayList<>();
+        List<LocalDate> dates = tagCat.getDatesByTag(tag);
+        for (LocalDate d: dates) {
+            result.add(loadNoteByDate(d));
+        }
+        return result;
     }
 
     @GetMapping(value = "/tags")
