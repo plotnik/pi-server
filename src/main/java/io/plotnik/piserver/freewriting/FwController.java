@@ -236,9 +236,11 @@ public class FwController {
         return searchPatterns.getPatterns();
     }
 
-    @ApiOperation(value = "Найти фрирайты соответствующие паттерну")
-    @GetMapping(value = "/findPattern/{pattern}")
-    public List<String> findPattern(@PathVariable String pattern) {
+    @ApiOperation(value = "Найти фрирайты соответствующие шаблону поиска")
+    @GetMapping(value = "/findPattern")
+    public List<String> findPattern(
+        @ApiParam(value = "Шаблон поиска") @RequestParam(name = "p") String pattern) 
+    {
         return searchPatterns.findPattern(pattern);
     }
  }
