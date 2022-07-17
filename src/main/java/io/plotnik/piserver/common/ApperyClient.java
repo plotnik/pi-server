@@ -3,6 +3,7 @@ package io.plotnik.piserver.common;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
+import io.plotnik.piserver.freewriting.FwException;
 import io.plotnik.piserver.freewriting.dao.ApperyTag;
 
 import java.io.IOException;
@@ -108,7 +109,7 @@ public class ApperyClient {
         }
     }
 
-    public ApperyTag[] loadNoteTags() {
+    public ApperyTag[] loadNoteTags() throws FwException {
         try {
             String findResStr = Request.get(getApperyUriBuilder().build())
                 .addHeader("X-Appery-Database-Id", dbId)
@@ -117,8 +118,7 @@ public class ApperyClient {
             return om.readValue(findResStr, ApperyTag[].class);
 
         } catch (IOException | URISyntaxException e) {
-            e.printStackTrace();
-            return null;
+            throw new FwException(e.getMessage());
         }
     }
 }

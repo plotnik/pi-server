@@ -50,10 +50,18 @@ public class FwController {
     @Value("${freewriting.tags}")
     private String tagsPath;
 
+    @Value("${freewriting.patterns}")
+    private String patternsFolder;
+
     /**
      * База фрирайтов.
      */
     Freewriting fw;
+
+    /**
+     * База шаблонов поискаs.
+     */
+    SearchPatterns searchPatterns;
 
     /**
      * Маппинг дат на фрирайты.
@@ -70,7 +78,9 @@ public class FwController {
     public void init() {
         try {
             reloadNotes();
+            reloadPatterns();
             reloadTags();
+
         } catch (Exception e) {
             if (e instanceof FwException) {
                 log.warn("[FW Exception] " + e.getMessage());
@@ -85,6 +95,9 @@ public class FwController {
     public OpResult reloadFwNotes() {
         try {
             reloadNotes();
+            reloadPatterns();
+            reloadTags();
+            
             return new OpResult(true, fw.getFWDates().size() + " notes loaded");
 
         } catch (Exception e) {
@@ -105,6 +118,10 @@ public class FwController {
         }
 
         tagCat.loadTagDefinitions(homePath + tagsPath);
+    }
+
+    void reloadPatterns() throws FwException {
+        searchPatterns = new SearchPatterns(homePath + patternsFolder, fw.fdates);
     }
 
     @GetMapping()
@@ -185,7 +202,13 @@ public class FwController {
     @GetMapping(value = "/reloadTags")
     @ApiOperation(value = "Перезагрузить соответствие между фрирайтами и тегами из Аппери.")
     public OpResult reloadTags() {
-        return tagCat.loadNoteToTagsMapping();
+        try {
+            return tagCat.loadNoteToTagsMapping();
+            
+        } catch (FwException e) {
+            System.out.println("[ERROR] " + e.getMessage());
+            return new OpResult(false);
+        }
     }
 
     @ApiOperation(value = "Изменить теги для фрирайта")
@@ -207,4 +230,15 @@ public class FwController {
         return tagCat.updateNoteTags(date, req.getNewTags());
     }
 
+    @GetMapping(value = "/patterns")
+    @ApiOperation(value = "Вернуть список шаблонов поиска")
+    public List<String> getPatterns() {
+        return searchPatterns.getPatterns();
+    }
+
+    @ApiOperation(value = "Найти фрирайты соответствующие паттерну")
+    @GetMapping(value = "/findPattern/{pattern}")
+    public List<String> findPattern(@PathVariable String pattern) {
+        return searchPatterns.findPattern(pattern);
+    }
  }

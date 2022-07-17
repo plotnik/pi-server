@@ -9,6 +9,7 @@ lists:
 freewriting:
     path: Documents/pages/
     tags: Documents/tags/
+    patterns: Documents/patterns/
 
 appery:
     db-id: 5fddc3bb2e22d76142f22f65
@@ -30,6 +31,7 @@ lists:
 freewriting:
     path: Документы/Freewriting/pages/
     tags: Документы/Freewriting/tags/
+    patterns: Документы/Freewriting/patterns/
 
 appery:
     coll-name: Tags_test
@@ -50,6 +52,7 @@ lists:
 freewriting:
     path: fw/pages/
     tags: fw/tags/
+    patterns: fw/patterns/
 
 appery:
     coll-name: Tags_test

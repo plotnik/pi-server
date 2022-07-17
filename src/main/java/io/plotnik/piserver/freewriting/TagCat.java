@@ -91,9 +91,12 @@ public class TagCat {
     /**
      * Загрузить связки между фрирайтами и тегами из Аппери.
      */
-    public OpResult loadNoteToTagsMapping() {
+    public OpResult loadNoteToTagsMapping() throws FwException {
         try {
             ApperyTag[] apperyTags = apperyClient.loadNoteTags();
+            if (apperyTags == null) {
+                throw new FwException("[WARNING] Tags not found in Appery.io");
+            }
 
             for (ApperyTag atag : apperyTags) {
 
