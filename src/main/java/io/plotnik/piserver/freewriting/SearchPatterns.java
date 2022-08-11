@@ -38,6 +38,10 @@ public class SearchPatterns {
 
     public final static DateTimeFormatter ymdFormat = DateTimeFormatter.ofPattern("yyyy-MM-dd");
 
+    List<String> cachedResult;
+
+    String cachedTitle;
+
     public SearchPatterns(String home, List<FwDate> fdates) throws FwException {
         this.home = home;
         this.fdates = fdates;
@@ -116,6 +120,10 @@ public class SearchPatterns {
     }
 
     public List<String> findPattern(String title) {
+        if (title.equals(cachedTitle)) {
+            return cachedResult;
+        }
+
         SearchPattern pattern = patterns.get(title);
         if (pattern == null) {
             return new ArrayList<String>();
@@ -134,7 +142,11 @@ public class SearchPatterns {
 
         List<LocalDate> dlist = new ArrayList<>(dates);
         dlist.sort((d1, d2) -> -d1.compareTo(d2));
-        return dlist.stream().map(it -> it.format(ymdFormat)).collect(Collectors.toList());
+        List<String> result = dlist.stream().map(it -> it.format(ymdFormat)).collect(Collectors.toList());
+
+        cachedResult = result;
+        cachedTitle = title;
+        return result;
     }
 
     /**
