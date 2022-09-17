@@ -32,6 +32,7 @@ import java.util.List;
 import java.util.Map;
 
 import javax.annotation.PostConstruct;
+import javax.servlet.ServletContext;
 
 
 @RestController
@@ -70,6 +71,9 @@ public class FwController {
 
     @Autowired
     TagCat tagCat;
+
+    @Autowired
+    ServletContext servletContext;
 
     /**
      * Предзагрузка.
@@ -121,7 +125,7 @@ public class FwController {
     }
 
     void reloadPatterns() throws FwException {
-        searchPatterns = new SearchPatterns(homePath + patternsFolder, fw.fdates);
+        searchPatterns = new SearchPatterns(homePath + patternsFolder, fw.fdates, servletContext.getRealPath("/WEB-INF/"));
     }
 
     @GetMapping()

@@ -37,14 +37,19 @@ public class SearchPatterns {
     String sortingOrderFile = "fw-patterns-sort.json";
 
     public final static DateTimeFormatter ymdFormat = DateTimeFormatter.ofPattern("yyyy-MM-dd");
+    
+    public final static DateTimeFormatter dmyFormat = DateTimeFormatter.ofPattern("d.MM.yyyy");
 
     List<String> cachedResult;
 
     String cachedTitle;
 
-    public SearchPatterns(String home, List<FwDate> fdates) throws FwException {
+    String tempFolder;
+
+    public SearchPatterns(String home, List<FwDate> fdates, String tempFolder) throws FwException {
         this.home = home;
         this.fdates = fdates;
+        this.tempFolder = tempFolder;
         loadPatterns();
         loadSortingOrder();
     }
@@ -82,8 +87,7 @@ public class SearchPatterns {
 
     // Прочитать сортировку поисковых паттернов
     void loadSortingOrder() {
-        String targetFolderPath = System.getProperty("user.home") + "/.plotnik";
-        File orderFile = new File(targetFolderPath, sortingOrderFile);
+        File orderFile = new File(tempFolder, sortingOrderFile);
         if (orderFile.exists()) {
             try {
                 String text = Files.readString(Paths.get(orderFile.getPath()));
@@ -101,8 +105,7 @@ public class SearchPatterns {
     void updateSortingOrder(String pattern) {
         try {
             sortingOrder.put(pattern, System.currentTimeMillis());
-            String targetFolderPath = System.getProperty("user.home") + "/.plotnik";
-            File orderFile = new File(targetFolderPath, sortingOrderFile);
+            File orderFile = new File(tempFolder, sortingOrderFile);
             om.writeValue(orderFile, sortingOrder);
         } catch (Exception e) {
             e.printStackTrace();
@@ -190,8 +193,8 @@ public class SearchPatterns {
     List<LocalDate> extractIntervals(List<List<String>> intervals) {
         List<LocalDate> result = new ArrayList<>();
         for (List<String> iv : intervals) {
-            LocalDate dt1 = LocalDate.parse(iv.get(0), ymdFormat);
-            LocalDate dt2 = LocalDate.parse(iv.get(1), ymdFormat);
+            LocalDate dt1 = LocalDate.parse(iv.get(0), dmyFormat);
+            LocalDate dt2 = LocalDate.parse(iv.get(1), dmyFormat);
 
             for (LocalDate d = dt1; d.isBefore(dt2) || d.isEqual(dt2); d = d.plusDays(1)) {
                 final LocalDate date = d;
