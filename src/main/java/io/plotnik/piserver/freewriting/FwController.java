@@ -193,7 +193,7 @@ public class FwController {
     @GetMapping(value = "/ctags")
     @ApiOperation(value = "Вернуть список тэгов, принадлежащих указанной категории")
     public List<FwTag> getTagsByCategory(
-            @ApiParam(value = "Категория тэгов") @RequestParam(name = "c") String cat) {
+            @ApiParam(value = "Категория тэгов") @RequestParam(name = "c", defaultValue = "") String cat) {
         return tagCat.getTagsByCategory(cat);
     }
 

@@ -198,6 +198,12 @@ public class TagCat {
      * Вернуть список тэгов с линками, принадлежащих указанной категории
      */
     public List<FwTag> getTagsByCategory(String cat) {
+        if (cat==null || cat.length()==0) {
+            return getTagsWithoutCategory();
+        } else 
+        if (cat.equals("*")) {
+            return getAllTags();
+        }
         Set<String> tags = catToTags.get(cat);
         if (tags != null) {
             return tags.stream().map(name -> {
@@ -207,6 +213,23 @@ public class TagCat {
         } else {
             return new ArrayList<>();
         }
+    }
+
+    /**
+     * Вернуть список тэгов, которые не принадлежат ни одной категории
+     */
+    List<FwTag> getTagsWithoutCategory() {
+        Stream<String> stm = tagToUrl.keySet().stream();
+        stm = stm.filter(s -> tagToCats.get(s) == null);
+        return stm.sorted().map(s -> new FwTag(s, tagToUrl.get(s))).collect(Collectors.toList());
+    }
+
+    /**
+     * Вернуть полный список тэгов
+     */
+    List<FwTag> getAllTags() {
+        Stream<String> stm = tagToUrl.keySet().stream();
+        return stm.sorted().map(s -> new FwTag(s, tagToUrl.get(s))).collect(Collectors.toList());
     }
 
     /**
