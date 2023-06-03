@@ -23,15 +23,15 @@ spring:
     profiles: local-linux
 
 home:
-    path: /data/home/egor/
+    path: /home/egor/
 
 lists:
     path: prog/cowon/
 
 freewriting:
-    path: Документы/Freewriting/pages/
-    tags: Документы/Freewriting/tags/
-    patterns: Документы/Freewriting/patterns/
+    path: pi/fw/pages/
+    tags: pi/fw/tags/
+    patterns: pi/fw/patterns/
 
 appery:
     coll-name: Tags_test
