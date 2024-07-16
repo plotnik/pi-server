@@ -15,8 +15,8 @@ import io.plotnik.piserver.freewriting.dao.FwDate;
 import io.plotnik.piserver.freewriting.dao.FwNote;
 import io.plotnik.piserver.freewriting.dao.FwTag;
 import io.plotnik.piserver.freewriting.dao.UpdateTagsRequest;
-import io.swagger.annotations.ApiOperation;
-import io.swagger.annotations.ApiParam;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.Parameter;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -31,8 +31,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import javax.annotation.PostConstruct;
-import javax.servlet.ServletContext;
+import jakarta.annotation.PostConstruct;
+import jakarta.servlet.ServletContext;
 
 
 @RestController
@@ -95,7 +95,7 @@ public class FwController {
     }
 
     @GetMapping(value = "/reloadNotes")
-    @ApiOperation(value = "Перезагрузить фрирайты из папки.")
+    @Operation(summary = "Перезагрузить фрирайты из папки.")
     public OpResult reloadFwNotes() {
         try {
             reloadNotes();
@@ -129,9 +129,9 @@ public class FwController {
     }
 
     @GetMapping()
-    @ApiOperation(value = "Получить фрирайт по дате.")
+    @Operation(summary = "Получить фрирайт по дате.")
     public FwNote getNote(
-        @ApiParam(value = "Дата фрирайта в формате `yyyy-MM-dd`") @RequestParam(name = "d", defaultValue = "") String datestr)
+        @Parameter(description = "Дата фрирайта в формате `yyyy-MM-dd`") @RequestParam(name = "d", defaultValue = "") String datestr)
     {
         try {
             /* Проверить что фрирайт для указанной даты существует,
@@ -171,9 +171,9 @@ public class FwController {
     }
 
     @GetMapping(value = "/{tag}")
-    @ApiOperation(value = "Получить даты фрирайтов по тэгу.")
+    @Operation(summary = "Получить даты фрирайтов по тэгу.")
     public List<String> getNotesByTag(
-        @ApiParam(value = "Название тэга") @PathVariable String tag)
+        @Parameter(description = "Название тэга") @PathVariable String tag)
     {
         List<String> result = new ArrayList<>();
         List<LocalDate> dates = tagCat.getDatesByTag(tag);
@@ -184,27 +184,27 @@ public class FwController {
     }
 
     @GetMapping(value = "/tags")
-    @ApiOperation(value = "Вернуть список тэгов, возможно отфильтрованный по заданной строке.")
+    @Operation(summary = "Вернуть список тэгов, возможно отфильтрованный по заданной строке.")
     public List<String> getFilteredTags(
-            @ApiParam(value = "Фильтр на имена тэгов") @RequestParam(name = "f", defaultValue = "") String filterstr) {
+            @Parameter(description = "Фильтр на имена тэгов") @RequestParam(name = "f", defaultValue = "") String filterstr) {
         return tagCat.getFilteredTags(filterstr);
     }
 
     @GetMapping(value = "/ctags")
-    @ApiOperation(value = "Вернуть список тэгов, принадлежащих указанной категории")
+    @Operation(summary = "Вернуть список тэгов, принадлежащих указанной категории")
     public List<FwTag> getTagsByCategory(
-            @ApiParam(value = "Категория тэгов") @RequestParam(name = "c", defaultValue = "") String cat) {
+            @Parameter(description = "Категория тэгов") @RequestParam(name = "c", defaultValue = "") String cat) {
         return tagCat.getTagsByCategory(cat);
     }
 
     @GetMapping(value = "/cats")
-    @ApiOperation(value = "Вернуть список категорий")
+    @Operation(summary = "Вернуть список категорий")
     public List<String> getCategories() {
         return tagCat.getCategories();
     }
 
     @GetMapping(value = "/reloadTags")
-    @ApiOperation(value = "Перезагрузить соответствие между фрирайтами и тегами из Аппери.")
+    @Operation(summary = "Перезагрузить соответствие между фрирайтами и тегами из Аппери.")
     public OpResult reloadTags() {
         try {
             return tagCat.loadNoteToTagsMapping();
@@ -215,7 +215,7 @@ public class FwController {
         }
     }
 
-    @ApiOperation(value = "Изменить теги для фрирайта")
+    @Operation(summary = "Изменить теги для фрирайта")
     @PostMapping(value = "/updateNoteTags")
     public OpResult updateNoteTags(@RequestBody UpdateTagsRequest req)
     {
@@ -235,15 +235,15 @@ public class FwController {
     }
 
     @GetMapping(value = "/patterns")
-    @ApiOperation(value = "Вернуть список шаблонов поиска")
+    @Operation(summary = "Вернуть список шаблонов поиска")
     public List<String> getPatterns() {
         return searchPatterns.getPatterns();
     }
 
-    @ApiOperation(value = "Найти фрирайты соответствующие шаблону поиска")
+    @Operation(summary = "Найти фрирайты соответствующие шаблону поиска")
     @GetMapping(value = "/findPattern")
     public List<String> findPattern(
-        @ApiParam(value = "Шаблон поиска") @RequestParam(name = "p") String pattern) 
+        @Parameter(description = "Шаблон поиска") @RequestParam(name = "p") String pattern) 
     {
         return searchPatterns.findPattern(pattern);
     }

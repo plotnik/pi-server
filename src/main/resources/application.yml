@@ -20,7 +20,9 @@ appery:
 ####### LOCAL LINUX
 
 spring:
-    profiles: local-linux
+  config:
+    activate:
+      on-profile: local-linux
 
 home:
     path: /home/egor/
@@ -41,8 +43,10 @@ appery:
 ####### LOCAL MAC
 
 spring:
-    profiles: local-mac
-
+  config:
+    activate:
+      on-profile: local-mac
+      
 home:
     path: /Users/eabramovich/Documents/pi/
 

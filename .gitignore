@@ -21,6 +21,9 @@ build/
 *.ipr
 out/
 
+### Angular
+src/main/resources/static
+
 ### NetBeans ###
 /nbproject/private/
 /nbbuild/
