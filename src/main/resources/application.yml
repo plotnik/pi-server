@@ -1,15 +1,15 @@
 ####### PI SERVER
 
 home:
-    path: /home/pi/
+    path: /home/egor/
 
 lists:
     path: Documents/pi-lists/
 
 freewriting:
-    path: Documents/pages/
-    tags: Documents/tags/
-    patterns: Documents/patterns/
+    path: Documents/fw/pages/
+    tags: Documents/fw/tags/
+    patterns: Documents/fw/patterns/
 
 appery:
     db-id: 5fddc3bb2e22d76142f22f65
