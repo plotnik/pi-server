@@ -3,10 +3,13 @@
 JSON-сервер на Raspberry Pi
 
 На local linux запускается командой::
-gradle ll bootRun
+./gradlew ll bootRun
 
 На local mac запускается командой::
-gradle mm bootRun
+./gradlew mm bootRun
 
 Swagger::
 http://localhost:8080/swagger-ui/index.html
+
+Running single test::
+./gradlew test --tests "io.plotnik.piserver.freewriting.FreewritingTest"

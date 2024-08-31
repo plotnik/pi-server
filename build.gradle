@@ -1,6 +1,6 @@
 plugins {
-	id 'org.springframework.boot' version '3.3.1'
-	id 'io.spring.dependency-management' version '1.1.5'
+	id 'org.springframework.boot' version '3.3.3'
+	id 'io.spring.dependency-management' version '1.1.6'
 	id 'java'
 	id 'war'
 }
@@ -33,9 +33,7 @@ dependencies {
 
 	providedRuntime 'org.springframework.boot:spring-boot-starter-tomcat'
 
-	testImplementation('org.springframework.boot:spring-boot-starter-test') {
-		exclude group: 'org.junit.vintage', module: 'junit-vintage-engine'
-	}
+	testImplementation 'org.springframework.boot:spring-boot-starter-test'
 }
 
 test {

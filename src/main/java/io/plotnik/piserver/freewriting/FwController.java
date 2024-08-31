@@ -21,6 +21,7 @@ import io.swagger.v3.oas.annotations.Parameter;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Paths;
@@ -112,7 +113,7 @@ public class FwController {
     void reloadNotes() throws FwException, IOException {
         /* Загрузить фрирайты
          */
-        fw = new Freewriting(homePath + fwPath);
+        fw = new Freewriting(new File(homePath + fwPath));
         log.info("[SUCCESS] " + fw.getFWDates().size() + " notes loaded");
 
         /* Замапить даты во фрирайты для более быстрого доступа

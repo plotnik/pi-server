@@ -20,16 +20,14 @@ import org.slf4j.LoggerFactory;
 import io.plotnik.piserver.freewriting.dao.FwDate;
 
 /**
- * Управление базой фрирайтов.
+ * Управление базой фрирайтов[^1].
+ * 
+ * [^1]: Фрирайтинг:
+ * https://ru.wikipedia.org/wiki/%D0%A4%D1%80%D0%B8%D1%80%D0%B0%D0%B9%D1%82%D0%B8%D0%BD%D0%B3
  */
 public class Freewriting {
 
     private static final Logger log = LoggerFactory.getLogger(Freewriting.class);
-
-    /**
-     * Каталог, в котором находятся фрирайты.
-     */
-    String home;
 
     /**
      * Сегодняшняя дата.
@@ -68,20 +66,20 @@ public class Freewriting {
      * из текущего каталога и подкаталогов сезонов.
      * Затем определим, какой реально дате соответствует каждый файл,
      * какова начальная дата базы и есть ли пропуски.
+     * 
+     * @param home  Каталог, в котором находятся фрирайты.
      */
-    Freewriting(String home) throws FwException {
+    Freewriting(File home) throws FwException {
         try {
-            this.home = home;
             today = LocalDate.now();
             dbStart = LocalDate.parse("2016-09-13", df);
 
             /* Загрузим все имеющиеся файлы `.md` из текущего каталога
                и подкаталогов сезонов
              */
-            File hf = new File(home);
             fdates = new ArrayList<>();
-            scanFolder(hf, today.getYear(), today.getMonthValue());
-            File[] hfiles = hf.listFiles();
+            scanFolder(home, today.getYear(), today.getMonthValue());
+            File[] hfiles = home.listFiles();
             for (File f : hfiles) {
                 if (f.isDirectory()) {
                     scanFolder(f, extractSeasonYear(f.getName()), -1);
@@ -139,7 +137,7 @@ public class Freewriting {
                 continue;
             }
             if (!(f.getName().endsWith(".md"))) {
-                throw new FwException("I EXPECT THE FOLDER TO CONTAIN ONLY '.md' FILES: " + f.getName());
+                throw new FwException("I EXPECT HOME FOLDER TO CONTAIN ONLY '.md' FILES, FOUND: '" + f.getName() + "'");
             }
 
             /* Преобразовать имя файла фрирайта в дату
