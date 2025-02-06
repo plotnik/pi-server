@@ -15,6 +15,12 @@ appery:
     db-id: 5fddc3bb2e22d76142f22f65
     coll-name: Tags
 
+management:
+  endpoints:
+    web:
+      exposure:
+        include: "*"
+        
 ---
 
 ####### LOCAL LINUX

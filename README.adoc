@@ -1,15 +1,85 @@
 = pi-server
 
-JSON-сервер на Raspberry Pi
+JSON-server on Raspberry Pi
 
-На local linux запускается командой::
+Running on local linux::
 ./gradlew ll bootRun
 
-На local mac запускается командой::
+Running on local mac::
 ./gradlew mm bootRun
 
+*Building war file:*
+
+1) ./gradlew clean build
+
+2) Copy `build/libs/pi.war` to Tomcat
+
+---
 Swagger::
 http://localhost:8080/swagger-ui/index.html
 
 Running single test::
 ./gradlew test --tests "io.plotnik.piserver.freewriting.FreewritingTest"
+
+== Actuator
+
+- http://localhost:8080/actuator
+  Provides a hypermedia-driven list of all available actuator endpoints.
+
+- http://localhost:8080/actuator/health
+  Shows application health information. It’s one of the few endpoints exposed by default even without the wildcard (`*`) exposure.
+
+- http://localhost:8080/actuator/info 
+  Displays arbitrary application info (such as build or version information).
+
+- http://localhost:8080/actuator/beans  
+  Lists all the Spring beans in your application context along with their details.
+
+- http://localhost:8080/actuator/configprops  
+  Exposes a list of all `@ConfigurationProperties` beans and their properties.
+
+- http://localhost:8080/actuator/env 
+  Shows the environment properties and profiles for the application.
+
+- http://localhost:8080/actuator/mappings 
+  Displays a list of all `@RequestMapping` paths and the corresponding handler methods.
+
+- http://localhost:8080/actuator/metrics 
+  Provides various application metrics (e.g., JVM stats, HTTP request metrics).  
+  *(Often combined with further querying, e.g., `/actuator/metrics/jvm.memory.used`.)*
+
+- http://localhost:8080/actuator/loggers 
+  Exposes and lets you change the logging levels of your application’s loggers.
+
+- http://localhost:8080/actuator/threaddump  
+  Returns a thread dump, which is useful for diagnosing performance issues or deadlocks.
+
+- http://localhost:8080/actuator/heapdump
+  Generates and returns a heap dump file of the application’s memory (provided the underlying JVM supports it).  
+  *(Note: This endpoint is typically resource-intensive and should be used with caution.)*
+
+- http://localhost:8080/actuator/httptrace
+  Shows trace information for HTTP requests. *(This endpoint is available only if you have enabled HTTP tracing; it’s not always active by default.)*
+
+- http://localhost:8080/actuator/auditevents  
+  Displays audit events (if auditing is configured in your application).
+
+- http://localhost:8080/actuator/scheduledtasks  
+  Lists scheduled tasks if you’re using Spring’s scheduling support.
+
+- http://localhost:8080/actuator/shutdown
+  Allows the application to be gracefully shut down via an HTTP endpoint.  
+  *(By default, this endpoint is disabled due to security concerns and must be explicitly enabled.)*
+
+---
+
+=== Important Considerations
+
+- **Security:**  
+  Exposing all endpoints, especially sensitive ones like `/actuator/env` or `/actuator/shutdown`, may pose a security risk in production environments. It’s advisable to secure these endpoints using Spring Security or to limit exposure to trusted networks.
+
+- **Endpoint Availability:**  
+  Some endpoints only become available if specific conditions are met (e.g., the presence of certain libraries, explicit enablement in configuration, or certain actuator properties). For example, `/actuator/heapdump` depends on the JVM’s support for heap dumping, and `/actuator/httptrace` must be enabled explicitly if you want to capture HTTP trace data.
+
+- **Version Differences:**  
+  The exact set of endpoints can differ between Spring Boot versions. Always refer to the [Spring Boot Actuator documentation](https://docs.spring.io/spring-boot/docs/current/reference/html/actuator.html) for the version you are using to confirm which endpoints are provided and their default security and exposure settings.
