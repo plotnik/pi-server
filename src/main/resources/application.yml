@@ -16,11 +16,14 @@ appery:
     coll-name: Tags
 
 management:
+  endpoint:
+    env:
+      show-values: ALWAYS
   endpoints:
     web:
       exposure:
-        include: "*"
-        
+        include: "*" 
+               
 ---
 
 ####### LOCAL LINUX
