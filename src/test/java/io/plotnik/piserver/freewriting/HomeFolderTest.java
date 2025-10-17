@@ -2,8 +2,6 @@ package io.plotnik.piserver.freewriting;
 
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 
-import java.io.File;
-
 import org.junit.jupiter.api.Test;
 
 public class HomeFolderTest {

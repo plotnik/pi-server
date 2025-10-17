@@ -1,0 +1,57 @@
+
+http://localhost:8080/actuator
+### Provides a hypermedia-driven list of all available actuator endpoints.
+
+http://192.168.1.235:8080/pi/actuator
+### Provides a hypermedia-driven list of all available actuator endpoints.
+
+http://localhost:8080/actuator/health
+### Shows application health information. It’s one of the few endpoints exposed by default even without the wildcard (`*`) exposure.
+
+http://192.168.1.235:8080/pi/actuator/health
+### Shows application health information. It’s one of the few endpoints exposed by default even without the wildcard (`*`) exposure.
+
+http://localhost:8080/actuator/info 
+### Displays arbitrary application info (such as build or version information).
+
+http://192.168.1.235:8080/pi/actuator/info 
+### Displays arbitrary application info (such as build or version information).
+
+- http://localhost:8080/actuator/beans  
+### Lists all the Spring beans in your application context along with their details.
+
+- http://localhost:8080/actuator/configprops  
+### Exposes a list of all `@ConfigurationProperties` beans and their properties.
+
+http://localhost:8080/actuator/env 
+### Shows the environment properties and profiles for the application.
+
+http://192.168.1.235:8080/pi/actuator/env 
+### Shows the environment properties and profiles for the application.
+
+- http://localhost:8080/actuator/mappings 
+### Displays a list of all `@RequestMapping` paths and the corresponding handler methods.
+
+- http://localhost:8080/actuator/metrics 
+### Provides various application metrics 
+
+- http://localhost:8080/actuator/loggers 
+### Exposes and lets you change the logging levels of your application’s loggers.
+
+- http://localhost:8080/actuator/threaddump  
+### Returns a thread dump, which is useful for diagnosing performance issues or deadlocks.
+
+- http://localhost:8080/actuator/heapdump
+### Generates and returns a heap dump file of the application’s memory (provided the underlying JVM supports it).  
+
+- http://localhost:8080/actuator/httptrace
+### Shows trace information for HTTP requests. *(This endpoint is available only if you have enabled HTTP tracing; it’s not always active by default.)*
+
+- http://localhost:8080/actuator/auditevents  
+### Displays audit events (if auditing is configured in your application).
+
+- http://localhost:8080/actuator/scheduledtasks  
+### Lists scheduled tasks if you’re using Spring’s scheduling support.
+
+- http://localhost:8080/actuator/shutdown
+### Allows the application to be gracefully shut down via an HTTP endpoint.  

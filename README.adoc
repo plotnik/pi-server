@@ -2,15 +2,12 @@
 
 JSON-server on Raspberry Pi
 
-Running on local linux::
-./gradlew ll bootRun
-
-Running on local mac::
-./gradlew mm bootRun
+Running on local::
+gradle bootRun
 
 *Building war file:*
 
-1) ./gradlew clean build
+1) gradle clean build
 
 2) Copy `build/libs/pi.war` to Tomcat
 

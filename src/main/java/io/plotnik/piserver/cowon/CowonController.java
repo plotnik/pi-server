@@ -1,5 +1,6 @@
 package io.plotnik.piserver.cowon;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -8,10 +9,11 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import io.plotnik.piserver.common.OpResult;
+import io.plotnik.piserver.config.FwConfig;
 
 import java.io.IOException;
 import java.nio.file.Files;
-import java.nio.file.Paths;
+import java.nio.file.Path;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -36,8 +38,8 @@ public class CowonController {
 
     static final Logger logger = Logger.getLogger(CowonController.class.getName());
 
-    @Value("${home.path}")
-    private String homePath;
+    @Autowired
+    private FwConfig fwConfig;
 
     @Value("${lists.path}")
     private String listsPath;
@@ -88,13 +90,14 @@ public class CowonController {
             ObjectMapper mapper = new ObjectMapper();
 
             // прочитать из файла список альбомов на плейере
-            byte[] jsonData = Files.readAllBytes(Paths.get(homePath, listsPath + COWON_JSON));
+            byte[] jsonData = Files.readAllBytes(fwConfig.path().resolve(listsPath).resolve(COWON_JSON));
             jalbums = mapper.readValue(jsonData, new TypeReference<List<CowonAlbum>>() {
             });
 
             // прочитать из файла историю
-            if (Files.exists(Paths.get(homePath, listsPath + HISTORY_JSON))) {
-                jsonData = Files.readAllBytes(Paths.get(homePath, listsPath + HISTORY_JSON));
+            Path historyPath = fwConfig.path().resolve(listsPath).resolve(HISTORY_JSON);
+            if (Files.exists(historyPath)) {
+                jsonData = Files.readAllBytes(historyPath);
                 history = mapper.readValue(jsonData, new TypeReference<Map<String, CowonHistory>>() {
                 });
 
@@ -174,7 +177,7 @@ public class CowonController {
     private void saveHistory() {
         try {
             ObjectMapper mapper = new ObjectMapper();
-            mapper.writeValue(Paths.get(homePath, listsPath + HISTORY_JSON).toFile(), history);
+            mapper.writeValue(fwConfig.path().resolve(listsPath).resolve(HISTORY_JSON).toFile(), history);
 
         } catch (IOException ex) {
             logger.log(Level.SEVERE, null, ex);

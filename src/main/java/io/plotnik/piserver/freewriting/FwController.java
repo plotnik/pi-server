@@ -11,6 +11,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import io.plotnik.piserver.common.OpResult;
+import io.plotnik.piserver.config.FwConfig;
 import io.plotnik.piserver.freewriting.dao.FwDate;
 import io.plotnik.piserver.freewriting.dao.FwNote;
 import io.plotnik.piserver.freewriting.dao.FwTag;
@@ -42,9 +43,8 @@ public class FwController {
 
     private static final Logger log = LoggerFactory.getLogger(FwController.class);
 
-
-    @Value("${home.path}")
-    private String homePath;
+    @Autowired
+    private FwConfig fwConfig;
 
     @Value("${freewriting.path}")
     private String fwPath;
@@ -113,7 +113,7 @@ public class FwController {
     void reloadNotes() throws FwException, IOException {
         /* Загрузить фрирайты
          */
-        fw = new Freewriting(new File(homePath + fwPath));
+        fw = new Freewriting(new File(fwConfig.path().resolve(fwPath).toString()));
         log.info("[SUCCESS] " + fw.getFWDates().size() + " notes loaded");
 
         /* Замапить даты во фрирайты для более быстрого доступа
@@ -122,11 +122,11 @@ public class FwController {
             fmap.put(w.getDate(), w);
         }
 
-        tagCat.loadTagDefinitions(homePath + tagsPath);
+        tagCat.loadTagDefinitions(fwConfig.path().resolve(tagsPath).toString());
     }
 
     void reloadPatterns() throws FwException {
-        searchPatterns = new SearchPatterns(homePath + patternsFolder, fw.fdates, servletContext.getRealPath("/WEB-INF/"));
+        searchPatterns = new SearchPatterns(fwConfig.path().resolve(patternsFolder).toString(), fw.fdates, servletContext.getRealPath("/WEB-INF/"));
     }
 
     @GetMapping()

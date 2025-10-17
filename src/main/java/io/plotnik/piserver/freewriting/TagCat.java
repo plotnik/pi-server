@@ -25,7 +25,6 @@ import io.plotnik.piserver.common.ApperyClient;
 import io.plotnik.piserver.common.OpResult;
 import io.plotnik.piserver.freewriting.dao.ApperyTag;
 import io.plotnik.piserver.freewriting.dao.FwDate;
-import io.plotnik.piserver.freewriting.dao.FwNote;
 import io.plotnik.piserver.freewriting.dao.FwTag;
 
 /**

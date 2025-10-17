@@ -65,7 +65,6 @@ public class SearchPatterns {
         }
         
         File[] pfiles = pdir.listFiles();
-        int count = 0;
         for (File it : pfiles) {
             if (it.getName().endsWith(".json")) {
                 try {
@@ -74,7 +73,6 @@ public class SearchPatterns {
 
                     p.setFname(it.getName().substring(0, it.getName().length() - 5));
                     patterns.put(p.getTitle(), p);
-                    count++;
 
                 } catch (JsonProcessingException ej) {
                     ej.printStackTrace();

@@ -59,7 +59,7 @@ public class Freewriting {
     Calendar cal = Calendar.getInstance();
 
     static DateTimeFormatter df = DateTimeFormatter.ofPattern("yyyy-MM-dd");
-    static DateTimeFormatter weekDayFormat = DateTimeFormatter.ofPattern("EE", new Locale("ru"));
+    static DateTimeFormatter weekDayFormat = DateTimeFormatter.ofPattern("EE", Locale.forLanguageTag("ru"));
 
     /**
      * Мы загрузим все имеющиеся файлы `.md`

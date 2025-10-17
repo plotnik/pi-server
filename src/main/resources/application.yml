@@ -1,15 +1,12 @@
 ####### PI SERVER
 
-home:
-    path: /home/egor/
+freewriting:
+    path: pages/
+    tags: tags/
+    patterns: patterns/
 
 lists:
-    path: Documents/pi-lists/
-
-freewriting:
-    path: Documents/fw/pages/
-    tags: Documents/fw/tags/
-    patterns: Documents/fw/patterns/
+    path: json/
 
 appery:
     db-id: 5fddc3bb2e22d76142f22f65
@@ -33,17 +30,6 @@ spring:
     activate:
       on-profile: local-linux
 
-home:
-    path: /home/egor/
-
-lists:
-    path: prog/cowon/
-
-freewriting:
-    path: pi/fw/pages/
-    tags: pi/fw/tags/
-    patterns: pi/fw/patterns/
-
 appery:
     coll-name: Tags_test
 
@@ -55,17 +41,6 @@ spring:
   config:
     activate:
       on-profile: local-mac
-      
-home:
-    path: /Users/eabramovich/Documents/pi/
-
-lists:
-    path: json/
-
-freewriting:
-    path: fw/pages/
-    tags: fw/tags/
-    patterns: fw/patterns/
 
 appery:
     coll-name: Tags_test
